@@ -3,17 +3,24 @@ package com.minhchieu.controller;
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
 import com.minhchieu.mapstruct.mapper.MapStructMapper;
+import com.minhchieu.model.AuthenticateRequest;
 import com.minhchieu.model.Role;
 import com.minhchieu.model.Subscription;
 import com.minhchieu.orm.AccountRepository;
 import com.minhchieu.orm.RoleRepository;
 import com.minhchieu.orm.SubscriptionRepository;
-import com.minhchieu.service.CustomAuthenticateService;
+import com.minhchieu.serviceimpl.CustomAuthenticateService;
 import com.minhchieu.service.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +48,7 @@ public class AuthenticateController {
             SubscriptionRepository subscriptionRepository,
             MapStructMapper mapStructMapper,
             CustomAuthenticateService customAuthenticateService,
+            AuthenticationManager authenticationManager,
             JwtUtils jwtUtils
     ){
         this.accountRepository = accountRepository;
@@ -62,6 +70,31 @@ public class AuthenticateController {
         return ResponseEntity.status(HttpStatus.CREATED ).body(Map.of(
             "message","Register successfully",
             "account", accountGetDTO
+        ));
+    }
+
+    /*
+     * Login Authentication
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> createAuthenticateToken(@RequestBody AuthenticateRequest request) throws Exception{
+//        Authentication authentication;
+        try{
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        }
+        catch (BadCredentialsException ex){
+            throw new Exception("Incorrect username or password", ex);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        final UserDetails userDetails = customAuthenticateService.loadUserByUsername(request.getEmail());
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtUtils.generateToken(userDetails);
+
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                "message", "Login successfully",
+                "token", token
         ));
     }
 }

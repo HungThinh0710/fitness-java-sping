@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication(scanBasePackages = {"com.minhchieu.controller", "com.minhchieu.orm", "com.minhchieu.service", "com.minhchieu.mapstruct.mapper"})
+@SpringBootApplication(scanBasePackages = {"com.minhchieu.controller", "com.minhchieu.orm", "com.minhchieu.service", "com.minhchieu.serviceimpl", "com.minhchieu.mapstruct.mapper"})
 @EnableJpaRepositories("com.minhchieu.orm")
 @EntityScan(basePackages = { "com.minhchieu.model" })
 @Import({SpringSecurityConfiguration.class})

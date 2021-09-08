@@ -1,4 +1,4 @@
-package com.minhchieu.service;
+package com.minhchieu.serviceimpl;
 
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
@@ -9,6 +9,7 @@ import com.minhchieu.orm.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -27,21 +29,22 @@ public class CustomAuthenticateService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        Account account = accountRepository.findByEmail(email);
+        if(account == null)
+            throw new UsernameNotFoundException("User not found with Email: " + email);
 //        List<SimpleGrantedAuthority> roles = null;
-        if(username.equals("admin"))
-        {
-//            roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            return (UserDetails) new Admin("admin", "$2y$12$I0Di/vfUL6nqwVbrvItFVOXA1L9OW9kLwe.1qDPhFzIJBpWl76PAe");
-        }
-        else if(username.equals("user"))
-        {
-//            roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-            return (UserDetails) new Account("email", "$2y$12$VfZTUu/Yl5v7dAmfuxWU8uRfBKExHBWT1Iqi.s33727NoxHrbZ/h2");
-        }
-        throw new UsernameNotFoundException("User not found with username: " + username);
+//        List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
+//        if (roleNames != null) {
+//            for (String role : roleNames) {
+//                // ROLE_USER, ROLE_ADMIN,..
+//                GrantedAuthority authority = new SimpleGrantedAuthority(role);
+//                grantList.add(authority);
+//            }
+//        }
+        return new User(account.getEmail(), account.getPassword(), new ArrayList<>());
     }
 
 
@@ -62,6 +65,5 @@ public class CustomAuthenticateService implements UserDetailsService {
         accountEntity.setUpdatedAt(ts);
         accountRepository.save(accountEntity);
         return accountEntity;
-//        AccountGetDTO accountGetDTO = new AccountGetDTO(accountEntity);
     }
 }

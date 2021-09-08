@@ -9,7 +9,7 @@ import com.minhchieu.model.Subscription;
 import com.minhchieu.orm.AccountRepository;
 import com.minhchieu.orm.RoleRepository;
 import com.minhchieu.orm.SubscriptionRepository;
-import com.minhchieu.service.CustomAuthenticateService;
+import com.minhchieu.serviceimpl.CustomAuthenticateService;
 import com.minhchieu.service.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,6 @@ public class AccountController {
     private SubscriptionRepository subscriptionRepository;
     private MapStructMapper mapStructMapper;
     private CustomAuthenticateService customAuthenticateService;
-    private AuthenticationManager authenticationManager;
     private JwtUtils jwtUtils;
 
     @Autowired
@@ -45,7 +44,6 @@ public class AccountController {
         this.subscriptionRepository = subscriptionRepository;
         this.mapStructMapper = mapStructMapper;
         this.customAuthenticateService = customAuthenticateService;
-        this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
 
     }

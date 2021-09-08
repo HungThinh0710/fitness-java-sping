@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class JwtUtils {
@@ -30,12 +31,12 @@ public class JwtUtils {
 
         Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 
-        if (roles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            claims.put("isAdmin", true);
-        }
-        if (roles.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            claims.put("isUser", true);
-        }
+//        if (roles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+//            claims.put("isAdmin", true);
+//        }
+//        if (roles.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+//            claims.put("isUser", true);
+//        }
 
         return doGenerateToken(claims, userDetails.getUsername());
     }
@@ -61,7 +62,19 @@ public class JwtUtils {
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
 
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     public List<SimpleGrantedAuthority> getRolesFromToken(String token) {

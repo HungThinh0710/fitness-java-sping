@@ -68,16 +68,4 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-        public Account(String name, Date dob, String email, String gender, String phone, String type, String password, String address, Timestamp createdAt, Timestamp updatedAt) {
-        this.name = name;
-        this.dob = dob;
-        this.email = email;
-        this.gender = gender;
-        this.phone = phone;
-        this.type = type;
-        this.password = password;
-        this.address = address;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }
