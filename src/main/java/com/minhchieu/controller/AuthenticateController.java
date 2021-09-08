@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.Map;
 
 @RequestMapping("/authenticate")
@@ -52,7 +53,7 @@ public class AuthenticateController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> saveUser(@RequestBody AccountPostDTO user) throws Exception {
+    public ResponseEntity<?> saveUser(@Valid @RequestBody AccountPostDTO user) throws Exception {
         Role role = roleRepository.findById(1L).orElseThrow(()-> new EntityNotFoundException());
         Subscription subscription = subscriptionRepository.findById(1L).orElseThrow(()-> new EntityNotFoundException());
         user.setRole(role);
