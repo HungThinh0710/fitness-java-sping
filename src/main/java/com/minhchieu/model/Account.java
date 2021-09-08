@@ -1,52 +1,76 @@
 package com.minhchieu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Collection;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "accounts")
-public class Account {
+public class Account implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     @Column(name = "dob", columnDefinition = "DATE")
     @Temporal(TemporalType.DATE)
     private Date dob;
+    @Column
     private String email;
+    @Column
     private String gender;
+    @Column
     private String phone;
+    @Column
     private String type;
+    @Column
     private String password;
+    @Column
     private String address;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToOne(mappedBy = "accountTeacher")
+    @OneToOne(mappedBy = "accountTeacher", fetch = FetchType.LAZY)
     private Teacher teacher;
 
-    @OneToOne(mappedBy = "accountCustomer")
+    @OneToOne(mappedBy = "accountCustomer", fetch = FetchType.LAZY)
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "role_id")
+    @JsonIgnore
+//    @JsonBackReference
+//    @JsonIdentityInfo(generator = "")
     private Role role;
 
-    @ManyToOne
+    @ManyToOne()
+    @JsonIgnore
     @JoinColumn(name = "subscription_id")
+//    @JsonBackReference
     private Subscription subscription;
 
     public Account(){}
-    public Account(String name, Date dob, String email, String gender, String phone, String type, String password, String address, Timestamp createdAt, Timestamp updatedAt) {
+
+    public Account(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+        public Account(String name, Date dob, String email, String gender, String phone, String type, String password, String address, Timestamp createdAt, Timestamp updatedAt) {
         this.name = name;
         this.dob = dob;
         this.email = email;
@@ -56,94 +80,6 @@ public class Account {
         this.password = password;
         this.address = address;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

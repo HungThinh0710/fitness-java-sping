@@ -1,59 +1,79 @@
 package com.minhchieu.controller;
 
+import com.minhchieu.mapstruct.dto.AccountGetDTO;
+import com.minhchieu.mapstruct.dto.AccountPostDTO;
+import com.minhchieu.mapstruct.mapper.MapStructMapper;
 import com.minhchieu.model.Account;
+import com.minhchieu.model.Role;
+import com.minhchieu.model.Subscription;
 import com.minhchieu.orm.AccountRepository;
+import com.minhchieu.orm.RoleRepository;
+import com.minhchieu.orm.SubscriptionRepository;
+import com.minhchieu.service.CustomAuthenticateService;
+import com.minhchieu.service.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.*;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@RequestMapping("/account")
 public class AccountController {
 
+    private AccountRepository accountRepository;
+    private RoleRepository roleRepository;
+    private SubscriptionRepository subscriptionRepository;
+    private MapStructMapper mapStructMapper;
+    private CustomAuthenticateService customAuthenticateService;
+    private AuthenticationManager authenticationManager;
+    private JwtUtils jwtUtils;
+
     @Autowired
-    AccountRepository accountRepository;
+    public AccountController(
+            AccountRepository accountRepository,
+            RoleRepository roleRepository,
+            SubscriptionRepository subscriptionRepository,
+            MapStructMapper mapStructMapper,
+            CustomAuthenticateService customAuthenticateService,
+            JwtUtils jwtUtils
+    ){
+        this.accountRepository = accountRepository;
+        this.roleRepository = roleRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.mapStructMapper = mapStructMapper;
+        this.customAuthenticateService = customAuthenticateService;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+
+    }
 
     @GetMapping("/")
     public List<Account> index(){
         return accountRepository.findAll();
     }
 
-    @PostMapping("/account/create")
-    public Account create(@RequestBody Map<String, String> body) throws ParseException {
-
-        Timestamp ts=new Timestamp(new java.util.Date().getTime());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date execDate = new Date(dateFormat.parse(body.get("dob")).getTime());
-
-        Account account = new Account();
-//        account.setName(body.get("name"));
-//        account.setDob(execDate);
-//        account.setEmail(body.get("email"));
-//        account.setGender(body.get("gender"));
-//        account.setPhone(body.get("phone"));
-//        account.setType("");
-//        account.setPassword("$2yexzy");
-//        account.setAddress(body.get("address"));
-//        account.setCreatedAt(ts);
-//        account.setUpdatedAt(ts);
-        return account;
+    @GetMapping("{/id}")
+    public ResponseEntity<AccountGetDTO> getAccountById(@PathVariable(value = "id") int id){
+        return new ResponseEntity<>(
+                mapStructMapper.accountToAccountGetDTO(
+                        accountRepository.findById(id).get()
+                ), HttpStatus.OK);
     }
 
-    @GetMapping("/hola")
-    public String hello(){
-        return "This is from Spring";
+    @PostMapping("/create")
+    public ResponseEntity<?> saveUser(@RequestBody AccountPostDTO user) throws Exception {
+        Role role = roleRepository.findById(1L).orElseThrow(()-> new EntityNotFoundException());
+        Subscription subscription = subscriptionRepository.findById(1L).orElseThrow(()-> new EntityNotFoundException());
+        user.setRole(role);
+        user.setSubscription(subscription);
+        AccountGetDTO accountGetDTO = mapStructMapper.accountToAccountGetDTO(customAuthenticateService.save(user));
+//        customAuthenticateService.save(user);
+//        return accountGetDTO;
+        return ResponseEntity.ok(accountGetDTO);
     }
 
-//    @GetMapping("/teachers")
-//    public Collection teachers() {
-//        return accountRepository.
-//    }
+
 }

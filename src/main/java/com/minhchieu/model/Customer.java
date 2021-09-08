@@ -11,7 +11,7 @@ import java.util.Collection;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String job;
     private String description;

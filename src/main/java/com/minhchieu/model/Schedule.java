@@ -11,7 +11,7 @@ public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String note;
     @Column(name = "teach_time")
     private Timestamp teachTime;

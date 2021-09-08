@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class CoursePost {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String description;
     private String content;
     private int status;

@@ -11,7 +11,7 @@ import java.util.Collection;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String description;
     private int status;
 
