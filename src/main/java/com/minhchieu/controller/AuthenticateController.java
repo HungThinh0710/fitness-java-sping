@@ -2,6 +2,7 @@ package com.minhchieu.controller;
 
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
+import com.minhchieu.mapstruct.dto.AuthenticateRequestDTO;
 import com.minhchieu.mapstruct.mapper.MapStructMapper;
 import com.minhchieu.model.AuthenticateRequest;
 import com.minhchieu.model.Role;
@@ -77,8 +78,7 @@ public class AuthenticateController {
      * Login Authentication
      */
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticateToken(@RequestBody AuthenticateRequest request) throws Exception{
-//        Authentication authentication;
+    public ResponseEntity<?> createAuthenticateToken(@Valid @RequestBody AuthenticateRequestDTO request) throws Exception{
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         }
