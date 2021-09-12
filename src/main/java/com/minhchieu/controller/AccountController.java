@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/account")
@@ -48,9 +51,16 @@ public class AccountController {
 
     }
 
+//    @GetMapping("/")
+//    public List<Account> index(){
+//        return accountRepository.findAll();
+//    }
+
     @GetMapping("/")
-    public List<Account> index(){
-        return accountRepository.findAll();
+    public ResponseEntity<AccountGetDTO> getCurrentAccount(Authentication authentication){
+        String email = authentication.getName();
+        AccountGetDTO accountGetDTO = mapStructMapper.accountToAccountGetDTO(accountRepository.findByEmail(email));
+        return new ResponseEntity<>(accountGetDTO, HttpStatus.OK);
     }
 
     @GetMapping("{/id}")
