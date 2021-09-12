@@ -20,6 +20,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+        // -- Swagger UI v3 (OpenAPI)
+        "/v1/docs",
+        "/v1/api-docs/**",
+        "/v1/api-docs//swagger-config",
+        "/v1/swagger-ui.html",
+        "/v1/swagger-ui/**",
+        // other public endpoints of your API may be appended to this array
+    };
+
     @Autowired
     private CustomAuthenticateService customAuthenticateService;
 
@@ -43,9 +53,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeRequests().antMatchers("/helloadmin").hasRole("ADMIN")
-            .antMatchers("/hellouser").hasAnyRole("USER","ADMIN")
+        http.csrf().disable().authorizeRequests()
+//            .authorizeRequests().antMatchers("/helloadmin").hasRole("ADMIN")
+//            .antMatchers("/hellouser").hasAnyRole("USER","ADMIN")
+            .antMatchers(AUTH_WHITELIST).permitAll()
             .antMatchers("/authenticate/register", "/authenticate/login", "/account/create").permitAll().anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).
             and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
