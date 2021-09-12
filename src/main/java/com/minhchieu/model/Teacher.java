@@ -1,12 +1,16 @@
 package com.minhchieu.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "teachers")
 public class Teacher {
     @Id
