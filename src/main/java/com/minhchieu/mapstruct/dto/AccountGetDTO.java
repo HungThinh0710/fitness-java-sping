@@ -1,8 +1,10 @@
 package com.minhchieu.mapstruct.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.minhchieu.model.Customer;
 import com.minhchieu.model.Role;
 import com.minhchieu.model.Subscription;
+import com.minhchieu.model.Teacher;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,6 +50,12 @@ public class AccountGetDTO {
     @NotNull
     @JsonProperty("subscription")
     private Subscription subscription;
+
+    @JsonProperty("teacher")
+    private Teacher teacher;
+
+    @JsonProperty("customer")
+    private Customer customer;
 
     public AccountGetDTO(){}
 
