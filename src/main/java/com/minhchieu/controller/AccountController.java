@@ -2,13 +2,10 @@ package com.minhchieu.controller;
 
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
+import com.minhchieu.mapstruct.dto.SelectAccountTypePostDTO;
 import com.minhchieu.mapstruct.mapper.MapStructMapper;
-import com.minhchieu.model.Account;
-import com.minhchieu.model.Role;
-import com.minhchieu.model.Subscription;
-import com.minhchieu.orm.AccountRepository;
-import com.minhchieu.orm.RoleRepository;
-import com.minhchieu.orm.SubscriptionRepository;
+import com.minhchieu.model.*;
+import com.minhchieu.orm.*;
 import com.minhchieu.serviceimpl.CustomAuthenticateService;
 import com.minhchieu.service.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +27,8 @@ public class AccountController {
     private AccountRepository accountRepository;
     private RoleRepository roleRepository;
     private SubscriptionRepository subscriptionRepository;
+    private TeacherRepository teacherRepository;
+    private CustomerRepository customerRepository;
     private MapStructMapper mapStructMapper;
     private CustomAuthenticateService customAuthenticateService;
     private JwtUtils jwtUtils;
@@ -37,6 +37,8 @@ public class AccountController {
     public AccountController(
             AccountRepository accountRepository,
             RoleRepository roleRepository,
+            TeacherRepository teacherRepository,
+            CustomerRepository customerRepository,
             SubscriptionRepository subscriptionRepository,
             MapStructMapper mapStructMapper,
             CustomAuthenticateService customAuthenticateService,
@@ -44,7 +46,9 @@ public class AccountController {
     ){
         this.accountRepository = accountRepository;
         this.roleRepository = roleRepository;
+        this.teacherRepository = teacherRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.customerRepository = customerRepository;
         this.mapStructMapper = mapStructMapper;
         this.customAuthenticateService = customAuthenticateService;
         this.jwtUtils = jwtUtils;
@@ -69,6 +73,39 @@ public class AccountController {
                 mapStructMapper.accountToAccountGetDTO(
                         accountRepository.findById(id).get()
                 ), HttpStatus.OK);
+    }
+
+    @PostMapping("/select-type")
+    public ResponseEntity<?> selectAccountType(Authentication authentication, @Valid @RequestBody SelectAccountTypePostDTO request){
+        Account account = accountRepository.findByEmail(authentication.getName());
+        if(account.getTeacher() == null && account.getCustomer() == null){
+            switch (request.getAccountType()){
+                case 1:
+                    Teacher teacher = new Teacher();
+                    teacher.setDescription("");
+                    teacher.setStatus(0);
+                    teacher.setAccountTeacher(account);
+                    account.setTeacher(teacher);
+                    teacherRepository.save(teacher);
+                    break;
+                case 2:
+                    Customer customer = new Customer();
+                    customer.setJob("");
+                    customer.setDescription("");
+                    customer.setStatus(0);
+                    customer.setAccountCustomer(account);
+                    account.setCustomer(customer);
+                    customerRepository.save(customer);
+                    break;
+            }
+            String accountTypeText = request.getAccountType() == 1 ? "teacher": "customer";
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                    "message","Select account type to " + accountTypeText + " successfully!"
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                "message","This account is already select type."
+        ));
     }
 
     @PostMapping("/create")
