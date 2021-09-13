@@ -20,9 +20,9 @@ public class CustomerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("[Interceptor]: Checking permission for access customer pattern..");
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         if(antPathMatcher.match("/customer/**",request.getRequestURI())){
+            System.out.println("[Interceptor]: Checking permission for access customer pattern...");
             Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
             if(account.getCustomer() != null)
                 return true;

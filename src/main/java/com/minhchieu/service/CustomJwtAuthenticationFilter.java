@@ -37,7 +37,6 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter{
             String jwt = null, username = null;
             if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
-                System.out.println(jwt);
 //                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //                    UserDetails userDetails = customAuthenticateService.loadUserByUsername(username);
 //

@@ -43,9 +43,11 @@ public class Account implements Serializable {
     private Timestamp updatedAt;
 
     @OneToOne(mappedBy = "accountTeacher", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Teacher teacher;
 
     @OneToOne(mappedBy = "accountCustomer", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Customer customer;
 
     @ManyToOne()

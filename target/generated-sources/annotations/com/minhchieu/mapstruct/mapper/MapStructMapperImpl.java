@@ -2,13 +2,18 @@ package com.minhchieu.mapstruct.mapper;
 
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
+import com.minhchieu.mapstruct.dto.EnrolledCourseGetDTO;
 import com.minhchieu.model.Account;
+import com.minhchieu.model.Course;
+import com.minhchieu.model.Customer;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-09-12T21:12:15+0700",
+    date = "2021-09-13T17:41:04+0700",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.11 (Oracle Corporation)"
 )
 @Component
@@ -63,5 +68,21 @@ public class MapStructMapperImpl implements MapStructMapper {
         account.setSubscription( accountPostDTO.getSubscription() );
 
         return account;
+    }
+
+    @Override
+    public EnrolledCourseGetDTO enrolledCourseToCourseGetDTO(Customer customer) {
+        if ( customer == null ) {
+            return null;
+        }
+
+        EnrolledCourseGetDTO enrolledCourseGetDTO = new EnrolledCourseGetDTO();
+
+        Collection<Course> collection = customer.getCourses();
+        if ( collection != null ) {
+            enrolledCourseGetDTO.setCourses( new ArrayList<Course>( collection ) );
+        }
+
+        return enrolledCourseGetDTO;
     }
 }
