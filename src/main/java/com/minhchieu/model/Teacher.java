@@ -1,5 +1,6 @@
 package com.minhchieu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,12 @@ public class Teacher {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonIgnore
     private Account accountTeacher;
 
     @OneToMany(mappedBy = "teacherCourse")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Collection<Course> courses;
 }
