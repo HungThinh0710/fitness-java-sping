@@ -1,11 +1,13 @@
 package com.minhchieu.mapstruct.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.minhchieu.annotation.UniqueEmail;
 import com.minhchieu.model.Role;
 import com.minhchieu.model.Subscription;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Source;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -14,15 +16,16 @@ import java.util.Date;
 
 @Getter
 @Setter
+@Data
 public class AccountPostDTO {
     @JsonProperty("id")
     private Long id;
 
-    @NotNull
+//    @NotNull
     @JsonProperty("role")
     private Role role;
 
-    @NotNull
+//    @NotNull
     @JsonProperty("subscription")
     private Subscription subscription;
 
@@ -33,7 +36,6 @@ public class AccountPostDTO {
     @JsonProperty("dob")
     private Date dob;
 
-    @NotNull
     @JsonProperty("gender")
     private String gender;
 
@@ -43,23 +45,21 @@ public class AccountPostDTO {
     @JsonProperty("type")
     private String type ;
 
-    @NotNull
     @JsonProperty("password")
     private String password;
 
     @JsonProperty("address")
     private String address ;
 
-    @Email
-    @NotNull
+    @Email(message = "Your email address is not valid")
+//    @NotNull
+    @UniqueEmail
     @JsonProperty("email")
     private String email;
 
-    @NotNull
     @JsonProperty("created_at")
     private Timestamp createdAt;
 
-    @NotNull
     @JsonProperty("updated_at")
     private Timestamp updatedAt;
 

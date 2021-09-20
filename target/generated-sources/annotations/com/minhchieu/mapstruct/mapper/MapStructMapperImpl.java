@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-09-07T16:12:08+0700",
+    date = "2021-09-12T21:12:15+0700",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.11 (Oracle Corporation)"
 )
 @Component
@@ -34,6 +34,8 @@ public class MapStructMapperImpl implements MapStructMapper {
         accountGetDTO.setEmail( account.getEmail() );
         accountGetDTO.setRole( account.getRole() );
         accountGetDTO.setSubscription( account.getSubscription() );
+        accountGetDTO.setTeacher( account.getTeacher() );
+        accountGetDTO.setCustomer( account.getCustomer() );
 
         return accountGetDTO;
     }
