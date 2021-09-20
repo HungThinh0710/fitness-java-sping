@@ -2,6 +2,7 @@ package com.minhchieu.mapstruct.mapper;
 
 import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
+import com.minhchieu.mapstruct.dto.CourseGetDTO;
 import com.minhchieu.mapstruct.dto.EnrolledCourseGetDTO;
 import com.minhchieu.model.Account;
 import com.minhchieu.model.Course;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-09-13T17:41:04+0700",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.11 (Oracle Corporation)"
+    date = "2021-09-20T18:12:06+0700",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.12 (Amazon.com Inc.)"
 )
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -68,6 +69,21 @@ public class MapStructMapperImpl implements MapStructMapper {
         account.setSubscription( accountPostDTO.getSubscription() );
 
         return account;
+    }
+
+    @Override
+    public CourseGetDTO courseToCourseGetDTO(Course course) {
+        if ( course == null ) {
+            return null;
+        }
+
+        CourseGetDTO courseGetDTO = new CourseGetDTO();
+
+        courseGetDTO.setId( (int) course.getId() );
+        courseGetDTO.setPriceMoney( course.getPriceMoney() );
+        courseGetDTO.setName( course.getName() );
+
+        return courseGetDTO;
     }
 
     @Override

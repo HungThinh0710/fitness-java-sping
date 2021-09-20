@@ -28,7 +28,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         "/v1/swagger-ui.html",
         "/v1/swagger-ui/**",
         // other public endpoints of your API may be appended to this array
+        // -- Course public endpoints
+        "/course/*"
     };
+
 
     @Autowired
     private CustomAuthenticateService customAuthenticateService;
@@ -57,7 +60,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //            .authorizeRequests().antMatchers("/helloadmin").hasRole("ADMIN")
 //            .antMatchers("/hellouser").hasAnyRole("USER","ADMIN")
             .antMatchers(AUTH_WHITELIST).permitAll()
-            .antMatchers("/authenticate/register", "/authenticate/login", "/account/create").permitAll().anyRequest().authenticated()
+            .antMatchers("/authenticate/register", "/authenticate/login", "/account/create" ,"/courses").permitAll().anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).
             and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
             and().addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
