@@ -11,13 +11,10 @@ import com.minhchieu.service.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -107,6 +104,7 @@ public class AccountController {
                 "message","This account is already select type."
         ));
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<?> saveUser(@RequestBody AccountPostDTO user) throws Exception {

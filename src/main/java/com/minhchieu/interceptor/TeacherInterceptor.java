@@ -21,9 +21,9 @@ public class TeacherInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("[Interceptor]: Checking permission for access teacher pattern..");
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         if(antPathMatcher.match("/teacher/**",request.getRequestURI())){
+            System.out.println("[Interceptor]: Checking permission for access teacher pattern...");
             Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
             System.out.println(account.getTeacher());
             System.out.println(account.getTeacher() == null);
