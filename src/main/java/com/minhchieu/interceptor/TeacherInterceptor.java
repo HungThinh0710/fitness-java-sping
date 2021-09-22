@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 @Component
@@ -25,17 +26,7 @@ public class TeacherInterceptor implements HandlerInterceptor {
         if(antPathMatcher.match("/teacher/**",request.getRequestURI())){
             System.out.println("[Interceptor]: Checking permission for access teacher pattern...");
             Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
-            System.out.println(account.getTeacher());
-            System.out.println(account.getTeacher() == null);
-            if(account.getTeacher() != null)
-                return true;
-            else{
-                ObjectMapper mapper = new ObjectMapper();
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write(mapper.writeValueAsString(Map.of("message","Sorry! You are not a teacher!")));
-                return false;
-            }
+            return this.isTeacher(account, response);
         }
         return true;
     }
@@ -48,5 +39,18 @@ public class TeacherInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 //        System.out.println("Request and Response is completed");
+    }
+
+    public boolean isTeacher(Account account, HttpServletResponse response) throws IOException {
+
+        if(account.getTeacher() != null)
+            return true;
+        else{
+            ObjectMapper mapper = new ObjectMapper();
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(mapper.writeValueAsString(Map.of("message","Sorry! You are not a teacher!")));
+            return false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.minhchieu.config;
 
+import com.minhchieu.interceptor.CourseInterceptor;
 import com.minhchieu.interceptor.CustomerInterceptor;
 import com.minhchieu.interceptor.TeacherInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,13 @@ public class ServiceInterceptorAppConfig implements WebMvcConfigurer {
     TeacherInterceptor teacherInterceptor;
     @Autowired
     CustomerInterceptor customerInterceptor;
+    @Autowired
+    CourseInterceptor courseInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(teacherInterceptor);
         registry.addInterceptor(customerInterceptor);
+        registry.addInterceptor(courseInterceptor);
     }
 }
