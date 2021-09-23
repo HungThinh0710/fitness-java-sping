@@ -7,6 +7,7 @@ import com.minhchieu.model.Course;
 import com.minhchieu.model.CoursePost;
 import com.minhchieu.orm.CoursePostRepository;
 import com.minhchieu.orm.CourseRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,9 @@ public class CoursePostController {
     @Autowired
     MapStructMapper mapStructMapper;
 
+    @Operation(summary = "Create a course's post")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> create(@Valid @RequestBody PostToPostPostDTO post) {
-
-
         CoursePost coursePost = new CoursePost();
         Course course = courseRepository.findById((long) post.getCourseId()).orElseThrow(EntityNotFoundException::new);
         coursePost.setCourse(course);
@@ -53,4 +53,18 @@ public class CoursePostController {
         ));
     }
 
+    @Operation(summary = "Change post information by id")
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<?> changePost(@RequestBody PostToPostPostDTO request){
+        CoursePost coursePost = coursePostRepository.findById((long) request.getCourseId()).orElseThrow(EntityNotFoundException::new);
+        coursePost.setDescription(request.getDescription());
+        coursePost.setContent(request.getContent());
+        coursePost.setStatus(request.getStatus());
+        coursePost.setUpdated_at(Timestamp.from(Instant.now()));
+        PostGetDTO postGetDTO = mapStructMapper.postToPostGetDTO(coursePostRepository.save(coursePost));
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+            "message", "Update post with id " + request.getCourseId() + " successfully!",
+            "posts", postGetDTO
+        ));
+    }
 }
