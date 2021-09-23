@@ -77,4 +77,18 @@ public class CourseController {
 
         ));
     }
+
+    @PutMapping("/course")
+    //WITHOUT VALIDATE OWN COURSE
+    public ResponseEntity<?> create(@RequestBody CoursePostDTO request){
+        Course course = courseRepository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
+        course.setName(request.getName());
+        course.setPriceMoney(request.getPriceMoney());
+        courseRepository.save(course);
+        CourseGetDTO courseGetDTO = mapStructMapper.courseToCourseGetDTO(course);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+            "message", "Edit course Successfully",
+            "course",courseGetDTO
+        ));
+    }
 }

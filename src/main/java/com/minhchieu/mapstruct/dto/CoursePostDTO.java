@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CoursePostDTO {
 
+    @JsonProperty("course_id")
+    private long id;
+
     @JsonProperty("name")
     @NotNull
     private String name;
