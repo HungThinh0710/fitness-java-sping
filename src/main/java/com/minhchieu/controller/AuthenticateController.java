@@ -12,6 +12,9 @@ import com.minhchieu.orm.RoleRepository;
 import com.minhchieu.orm.SubscriptionRepository;
 import com.minhchieu.serviceimpl.CustomAuthenticateService;
 import com.minhchieu.service.JwtUtils;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +35,9 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RequestMapping("/authenticate")
+@Tag(name = "Authentication API")
 @RestController
-public class AuthenticateController {
+public class AuthenticateController{
     private AccountRepository accountRepository;
     private RoleRepository roleRepository;
     private SubscriptionRepository subscriptionRepository;
@@ -61,6 +65,7 @@ public class AuthenticateController {
         this.jwtUtils = jwtUtils;
     }
 
+    @Operation(summary = "Register account")
     @PostMapping("/register")
     public ResponseEntity<?> saveUser(@Valid @RequestBody AccountPostDTO user) throws Exception {
         Role role = roleRepository.findById(1L).orElseThrow(()-> new EntityNotFoundException());
@@ -77,6 +82,7 @@ public class AuthenticateController {
     /*
      * Login Authentication
      */
+    @Operation(summary = "Login")
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticateToken(@Valid @RequestBody AuthenticateRequestDTO request) throws Exception{
         try{

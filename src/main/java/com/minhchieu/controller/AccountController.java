@@ -8,6 +8,11 @@ import com.minhchieu.model.*;
 import com.minhchieu.orm.*;
 import com.minhchieu.serviceimpl.CustomAuthenticateService;
 import com.minhchieu.service.JwtUtils;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,8 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Account API")
+@SecurityRequirement(name = "api")
 @RequestMapping("/account")
 public class AccountController {
 

@@ -7,6 +7,8 @@ import com.minhchieu.model.Course;
 import com.minhchieu.model.CoursePost;
 import com.minhchieu.orm.CoursePostRepository;
 import com.minhchieu.orm.CourseRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import java.util.Map;
 
 @RequestMapping("/post")
 @RestController
+@SecurityRequirement(name = "api")
+@Tag(name = "Post API (Article)")
 public class CoursePostController {
 
     @Autowired

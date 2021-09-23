@@ -9,6 +9,8 @@ import com.minhchieu.model.Course;
 import com.minhchieu.model.Teacher;
 import com.minhchieu.orm.AccountRepository;
 import com.minhchieu.orm.CourseRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Course API")
+@SecurityRequirement(name = "api")
+
 public class CourseController {
 
     @Autowired
