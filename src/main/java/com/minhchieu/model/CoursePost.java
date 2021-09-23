@@ -29,5 +29,5 @@ public class CoursePost {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    private Course coursePost;
+    private Course course;
 }
