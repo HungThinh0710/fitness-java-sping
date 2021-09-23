@@ -3,7 +3,9 @@ package com.minhchieu.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minhchieu.model.Account;
 import com.minhchieu.model.Course;
+import com.minhchieu.model.CoursePost;
 import com.minhchieu.orm.AccountRepository;
+import com.minhchieu.orm.CoursePostRepository;
 import com.minhchieu.orm.CourseRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,8 @@ public class PostInterceptor implements HandlerInterceptor {
     @Autowired
     CourseRepository courseRepository;
     @Autowired
+    CoursePostRepository coursePostRepository;
+    @Autowired
     TeacherInterceptor teacherInterceptor;
     @Autowired
     CommonInterceptorUtilities commonInterceptorUtilities;
@@ -40,12 +44,13 @@ public class PostInterceptor implements HandlerInterceptor {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
 
         // | URI: /course | Method: POST
-        if(antPathMatcher.match(CREATE_POST_URI, request.getRequestURI()) && Objects.equals(request.getMethod(), "POST")){
+        //&& Objects.equals(request.getMethod(), "POST")
+        try{
             System.out.println("[Interceptor]: Checking permission for creating a post pattern...");
-//            String payload = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())); //Get error with getReader
             String payload = commonInterceptorUtilities.bodyParamString(request);
-            try {
-                JSONObject jsonObject = new JSONObject(payload);
+            JSONObject jsonObject = new JSONObject(payload);
+            System.out.println(request.getMethod());
+            if(antPathMatcher.match(CREATE_POST_URI, request.getRequestURI()) && Objects.equals(request.getMethod(), "POST")){
                 int courseId = Integer.parseInt(jsonObject.get("course_id").toString());
                 Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
                 Course course = courseRepository.findById((long) courseId).orElseThrow(EntityNotFoundException::new);
@@ -54,20 +59,31 @@ public class PostInterceptor implements HandlerInterceptor {
                     return teacherInterceptor.isTeacher(account, response);
                 }
                 return this.throwNonTeacher(response);
-
             }
-            catch (JSONException ex){
-                System.out.println(ex.getMessage());
-                return this.throwNotFoundCourseIdInJsonException(response);
-            }
-            catch (EntityNotFoundException exception){
-                return this.throwNotFoundEntityException(response);
-            }
-            catch (Exception ex){
-                System.out.println("ERROR IN HERE");
-                System.out.println(ex.getMessage());
+            else if(Objects.equals(request.getMethod(), "DELETE")){
+                int postId = Integer.parseInt(jsonObject.get("post_id").toString());
+                Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
+                CoursePost coursePost = coursePostRepository.findById((long) postId).orElseThrow(EntityNotFoundException::new);
+                long teacherId = coursePost.getCourse().getTeacherCourse().getId();
+                if(teacherId == account.getTeacher().getId()){
+                    return teacherInterceptor.isTeacher(account, response);
+                }
+                return this.throwNonTeacher(response);
             }
         }
+        catch (JSONException ex){
+            System.out.println(ex.getMessage());
+            return this.throwNotFoundCourseIdInJsonException(response);
+        }
+        catch (EntityNotFoundException exception){
+            return this.throwNotFoundEntityException(response);
+        }
+        catch (Exception ex){
+            System.out.println("ERROR IN HERE");
+            System.out.println(ex.getMessage());
+        }
+
+
         //Not at all
         return true;
     }
