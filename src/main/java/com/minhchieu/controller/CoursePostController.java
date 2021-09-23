@@ -1,5 +1,6 @@
 package com.minhchieu.controller;
 
+import com.minhchieu.mapstruct.dto.PostDeleteDTO;
 import com.minhchieu.mapstruct.dto.PostGetDTO;
 import com.minhchieu.mapstruct.dto.PostToPostPostDTO;
 import com.minhchieu.mapstruct.mapper.MapStructMapper;
@@ -67,4 +68,15 @@ public class CoursePostController {
             "posts", postGetDTO
         ));
     }
+
+    @Operation(summary = "Delete a post by id")
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<?> destroy(@RequestBody PostDeleteDTO request){
+        coursePostRepository.deleteById((long) request.getPostId());
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+            "message", "Delete post successfully"
+        ));
+    }
+
+
 }
