@@ -4,8 +4,10 @@ import com.minhchieu.mapstruct.dto.AccountGetDTO;
 import com.minhchieu.mapstruct.dto.AccountPostDTO;
 import com.minhchieu.mapstruct.dto.CourseGetDTO;
 import com.minhchieu.mapstruct.dto.EnrolledCourseGetDTO;
+import com.minhchieu.mapstruct.dto.PostGetDTO;
 import com.minhchieu.model.Account;
 import com.minhchieu.model.Course;
+import com.minhchieu.model.CoursePost;
 import com.minhchieu.model.Customer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-09-20T18:12:06+0700",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.12 (Amazon.com Inc.)"
+    date = "2021-09-23T13:37:43+0700",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.11 (Oracle Corporation)"
 )
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -100,5 +102,23 @@ public class MapStructMapperImpl implements MapStructMapper {
         }
 
         return enrolledCourseGetDTO;
+    }
+
+    @Override
+    public PostGetDTO postToPostGetDTO(CoursePost coursePost) {
+        if ( coursePost == null ) {
+            return null;
+        }
+
+        PostGetDTO postGetDTO = new PostGetDTO();
+
+        postGetDTO.setId( coursePost.getId() );
+        postGetDTO.setDescription( coursePost.getDescription() );
+        postGetDTO.setContent( coursePost.getContent() );
+        postGetDTO.setStatus( coursePost.getStatus() );
+        postGetDTO.setCreated_at( coursePost.getCreated_at() );
+        postGetDTO.setUpdated_at( coursePost.getUpdated_at() );
+
+        return postGetDTO;
     }
 }

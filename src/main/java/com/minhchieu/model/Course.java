@@ -24,7 +24,7 @@ public class Course {
     @Column
     private int status;
 
-    @OneToMany(mappedBy = "coursePost", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (CoursePost) (1 course có nhiều Course Post)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (CoursePost) (1 course có nhiều Course Post)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore

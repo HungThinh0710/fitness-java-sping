@@ -1,5 +1,6 @@
 package com.minhchieu;
 
+import com.minhchieu.config.MyFilter;
 import com.minhchieu.config.ServiceInterceptorAppConfig;
 import com.minhchieu.config.SpringSecurityConfiguration;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {"com.minhchieu.controller", "com.minhchieu.orm", "com.minhchieu.service", "com.minhchieu.serviceimpl", "com.minhchieu.mapstruct.mapper", "com.minhchieu.exception", "com.minhchieu.interceptor"})
 @EnableJpaRepositories("com.minhchieu.orm")
 @EntityScan(basePackages = { "com.minhchieu.model" })
-@Import({SpringSecurityConfiguration.class, ServiceInterceptorAppConfig.class})
+@Import({SpringSecurityConfiguration.class, ServiceInterceptorAppConfig.class, MyFilter.class})
 public class MainApplication {
 
     public static void main(String[] args) {
