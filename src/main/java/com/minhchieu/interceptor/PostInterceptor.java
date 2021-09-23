@@ -48,9 +48,8 @@ public class PostInterceptor implements HandlerInterceptor {
         try{
             System.out.println("[Interceptor]: Checking permission for creating a post pattern...");
             String payload = commonInterceptorUtilities.bodyParamString(request);
-            JSONObject jsonObject = new JSONObject(payload);
-            System.out.println(request.getMethod());
             if(antPathMatcher.match(CREATE_POST_URI, request.getRequestURI()) && Objects.equals(request.getMethod(), "POST")){
+                JSONObject jsonObject = new JSONObject(payload);
                 int courseId = Integer.parseInt(jsonObject.get("course_id").toString());
                 Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
                 Course course = courseRepository.findById((long) courseId).orElseThrow(EntityNotFoundException::new);
@@ -61,6 +60,7 @@ public class PostInterceptor implements HandlerInterceptor {
                 return this.throwNonTeacher(response);
             }
             else if(Objects.equals(request.getMethod(), "DELETE")){
+                JSONObject jsonObject = new JSONObject(payload);
                 int postId = Integer.parseInt(jsonObject.get("post_id").toString());
                 Account account = accountRepository.findByEmail(request.getUserPrincipal().getName());
                 CoursePost coursePost = coursePostRepository.findById((long) postId).orElseThrow(EntityNotFoundException::new);
@@ -96,7 +96,7 @@ public class PostInterceptor implements HandlerInterceptor {
     }
 
     private boolean throwNotFoundCourseIdInJsonException(HttpServletResponse response) throws Exception {
-        throwErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Oops! course_id is required!");
+        throwErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Oops! course_id or post_id is required!");
         return false;
     }
 
