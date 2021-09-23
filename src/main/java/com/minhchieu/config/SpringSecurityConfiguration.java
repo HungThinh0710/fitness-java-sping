@@ -29,7 +29,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         "/v1/swagger-ui/**",
         // other public endpoints of your API may be appended to this array
         // -- Course public endpoints
-        "/course/*"
+        "/course/*",
+        "/public/post"
     };
 
 
